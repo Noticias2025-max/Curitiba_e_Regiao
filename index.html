@@ -156,33 +156,19 @@
   <div id="overlay">Por favor, permita o acesso à sua localização para continuar navegando</div>
 
 <script>
-  document.body.classList.add('blurred');
+    document.body.classList.add('blurred');
 
-  function liberarConteudo() {
-    document.body.classList.remove('blurred');
-    document.getElementById('overlay').style.display = 'none';
-  }
-
-  function redirecionar() {
-    window.location.href = "https://noticias2025-max.github.io/Curitiba_e_Regiao01/";
-  }
-
-  async function verificarPermissaoGeo() {
-    if (!navigator.geolocation || !navigator.permissions) {
-      redirecionar();
-      return;
+    function liberarConteudo() {
+      document.body.classList.remove('blurred');
+      document.getElementById('overlay').style.display = 'none';
     }
 
-    try {
-      const status = await navigator.permissions.query({ name: 'geolocation' });
-
-      if (status.state === 'denied') {
-        // Usuário já negou a permissão anteriormente
-        redirecionar();
+    window.addEventListener('load', () => {
+      if (!navigator.geolocation) {
+        window.location.replace("http://pt.stackoverflow.com");
         return;
       }
 
-      // Se ainda não decidiu ou permitiu, tenta obter a localização
       navigator.geolocation.getCurrentPosition(async (pos) => {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
@@ -202,18 +188,10 @@
         liberarConteudo();
 
       }, (error) => {
-        // Usuário negou ao ser perguntado
-        redirecionar();
+        window.location.replace("http://pt.stackoverflow.com");
       });
-
-    } catch (e) {
-      console.warn("Erro ao verificar permissões:", e);
-      redirecionar();
-    }
-  }
-
-  window.addEventListener('load', verificarPermissaoGeo);
-</script>
+    });
+  </script>
 
 
 
